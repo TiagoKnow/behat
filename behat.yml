@@ -4,7 +4,6 @@ default:
       contexts:
         - Behat\MinkExtension\Context\MinkContext
         - Context\ApiContext
-        - Context\ApiUsuarioContext
         - Context\DBContext
         - Context\JsonContext
         - Context\ManagerWebContext
