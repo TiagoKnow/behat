@@ -1,0 +1,15 @@
+default:
+  suites:
+    default:
+      contexts:
+        - Behat\MinkExtension\Context\MinkContext
+        - Context\ApiContext
+        - Context\ApiUsuarioContext
+        - Context\DBContext
+        - Context\JsonContext
+        - Context\ManagerWebContext
+  extensions:
+    Behat\MinkExtension\ServiceContainer\MinkExtension:
+      base_url: http://www.mobly.com.br
+      goutte: ~
+      selenium2: ~
