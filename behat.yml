@@ -8,6 +8,7 @@ default:
         - Context\JsonContext
         - Context\ManagerWebContext
   extensions:
+    SensioLabs\Behat\PageObjectExtension: ~
     Behat\MinkExtension\ServiceContainer\MinkExtension:
       base_url: http://www.mobly.com.br
       goutte: ~

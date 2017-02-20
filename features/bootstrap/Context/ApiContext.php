@@ -24,7 +24,7 @@ class ApiContext implements Context
      */
     public function prepararCenario(BeforeScenarioScope $scope)
     {
-        switch ($_SERVER['ENVIRONMENT']) {
+       /* switch ($_SERVER['ENVIRONMENT']) {
         case 'production':
             $baseUrl = 'http://www.mobly.com.br';
         case 'testing':
@@ -35,7 +35,7 @@ class ApiContext implements Context
             break;
         default:
             throw new \RuntimeException('Variavel de ambiente ENVIRONMENT possui valor invalido');
-        }
+        }*/
     }
 
     /**

@@ -23,16 +23,18 @@ abstract class AbstractContext implements Context
      */
     public function gatherContexts(BeforeScenarioScope $scope)
     {
-        switch ($_SERVER['ENVIRONMENT']) {
-        case 'production':
-        case 'testing':
+        switch ($_SERVER['APPLICATION_ENV']) {
+        case 'live':
             $baseUrl = 'http://www.mobly.com.br';
             break;
-        case 'development':
+        case 'staging':
+            $baseUrl = 'http://alice-staging.mobly.com.br';
+            break;
+        case 'dev':
             $baseUrl = 'http://alice.mobly.dev';
             break;
         default:
-            throw new \RuntimeException('Variavel de ambiente ENVIRONMENT possui valor invalido');
+            throw new \RuntimeException('Variavel de ambiente APPLICATION_ENV possui valor invalido');
         }
 
         $environment = $scope->getEnvironment();
@@ -40,7 +42,12 @@ abstract class AbstractContext implements Context
         $this->minkContext->setMinkParameter('base_url', $baseUrl);
 
         if ($this->minkContext->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
-            $this->minkContext->getSession()->resizeWindow(1920, 1080, 'current');
+            $this->minkContext->getSession()->resizeWindow(1366, 768, 'current');
         }
+    }
+
+    protected function getPage()
+    {
+        return $this->minkContext->getSession()->getPage();
     }
 }
