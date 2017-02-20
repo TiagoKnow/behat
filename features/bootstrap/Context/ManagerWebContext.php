@@ -5,7 +5,6 @@ namespace Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Tester\Result\TestResult;
-use Page\AccountCreate;
 
 final class ManagerWebContext extends AbstractContext
 {
@@ -13,11 +12,6 @@ final class ManagerWebContext extends AbstractContext
      * @var \Page\AccountCreate
      */
     protected $accountCreatePage;
-
-    public function __construct(AccountCreate $accountCreatePage)
-    {
-        $this->accountCreatePage = $accountCreatePage;
-    }
 
     /**
      * @Given /^(?:eu )?(estou na) homepage$/
@@ -149,130 +143,6 @@ final class ManagerWebContext extends AbstractContext
     {
         $session = $this->minkContext->getSession();
         $session->setCookie($arg1, false);
-    }
-
-    /**
-     * @Given I am logged with :typeUser
-     */
-    public function iAmLoggedWith($typeUser)
-    {
-        $data = [];
-        switch($typeUser) {
-            case 'lojamobly' :
-                $data = [
-                    'url' => 'http://alice.mobly.dev/lojamobly/account/login/',
-                    'login' => 'dacolera360+miseravel+@gmail.com',
-                    'loginFormField' => 'LoginLojaMoblyForm[email]',
-                    'password' => '1q2w3e',
-                    'passwordFormField' => 'LoginLojaMoblyForm[password]'
-                ];
-                break;
-            case 'mobly' :
-                $data = [
-                    'url' => 'http://alice.mobly.dev/customer/account/login/',
-                    'login' => 'dacolera360@gmail.com',
-                    'loginFormField' => 'LoginForm[email]',
-                    'password' => '1q2w3e',
-                    'passwordFormField' => 'LoginForm[password]'
-                ];
-                break;
-            case  'guest' :
-                return;
-                break;
-            default :
-                throw new \InvalidArgumentException('Tipo de usuario invalido');
-        }
-
-        $this->minkContext->visit($data['url']);
-        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
-        $this->minkContext->reload();
-        $this->minkContext->fillField($data['loginFormField'], $data['login']);
-        $this->minkContext->fillField($data['passwordFormField'], $data['password']);
-        $this->minkContext->pressButton('Entrar');
-        $this->iWaitSeconds(3);
-    }
-
-    /**
-     * @Given I am signup :site as :typeUser
-     */
-    public function iAmSignupAs($site, $typeUser)
-    {
-        switch ($site) {
-            case 'lojamobly' :
-                if ($typeUser == 'PF') {
-                    throw new \LogicException('Loja mobly esta liberada apenas para empresas');
-                }
-                $this->lojamoblyAccountCreate();
-                break;
-            case 'mobly' :
-                if ($typeUser == 'PF') {
-                    $this->moblyPersonAccountCreate();
-                } else {
-                    $this->moblyCompanyAccountCreate();
-                }
-                break;
-            default :
-                throw new \InvalidArgumentException('Site Invalido');
-        }
-    }
-
-    protected function moblyPersonAccountCreate()
-    {
-        $this->accountCreatePage->open();
-        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
-        $this->minkContext->reload();
-        $this->accountCreatePage
-            ->setFirstName()
-            ->setLastName()
-            ->setCpf()
-            ->setBirthday()
-            ->setEmail()
-            ->setPassword()
-            ->setPassword2()
-            ->setGender()
-            ->createAccount();
-        $this->iWaitSeconds(3);
-    }
-
-    protected function moblyCompanyAccountCreate()
-    {
-        $this->accountCreatePage->open();
-        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
-        $this->minkContext->reload();
-        $this->accountCreatePage
-            ->setType('company')
-            ->setLegalName()
-            ->setFantasyName()
-            ->setCnpj()
-            ->setCompanyEmail()
-            ->setState()
-            ->setCustomerSegment()
-            ->setPassword()
-            ->setPassword2()
-            ->setIsento()
-            ->createAccount();
-        $this->iWaitSeconds(3);
-    }
-
-    protected function lojaMoblyAccountCreate()
-    {
-        $this->accountCreatePage->path = 'http://alice.mobly.dev/lojamobly/account/create/';
-        $this->accountCreatePage->open();
-        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
-        $this->minkContext->reload();
-        $this->accountCreatePage
-            ->setType('company')
-            ->setLegalName()
-            ->setFantasyName()
-            ->setCnpj()
-            ->setCompanyEmail()
-            ->setState()
-            ->setCustomerSegment()
-            ->setPassword()
-            ->setPassword2()
-            ->setIsento()
-            ->createAccount();
-        $this->iWaitSeconds(3);
     }
 }
 

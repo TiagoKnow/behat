@@ -18,32 +18,39 @@ abstract class AbstractContext implements Context
      */
     protected $minkContext;
 
+    protected $base_url;
+
     /**
      * @BeforeScenario
      */
     public function gatherContexts(BeforeScenarioScope $scope)
     {
-        switch ($_SERVER['APPLICATION_ENV']) {
-        case 'live':
-            $baseUrl = 'http://www.mobly.com.br';
-            break;
-        case 'staging':
-            $baseUrl = 'http://alice-staging.mobly.com.br';
-            break;
-        case 'dev':
-            $baseUrl = 'http://alice.mobly.dev';
-            break;
-        default:
-            throw new \RuntimeException('Variavel de ambiente APPLICATION_ENV possui valor invalido');
-        }
-
-        $environment = $scope->getEnvironment();
+        $environment = $this->getEnvironment($scope);
         $this->minkContext = $environment->getContext('Behat\MinkExtension\Context\MinkContext');
-        $this->minkContext->setMinkParameter('base_url', $baseUrl);
+        $this->minkContext->setMinkParameter('base_url', $this->base_url);
 
         if ($this->minkContext->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
             $this->minkContext->getSession()->resizeWindow(1366, 768, 'current');
         }
+    }
+
+    protected function getEnvironment(BeforeScenarioScope $scope)
+    {
+        switch ($_SERVER['APPLICATION_ENV']) {
+            case 'live':
+                $this->base_url = 'http://www.mobly.com.br';
+                break;
+            case 'staging':
+                $this->base_url = 'http://alice-staging.mobly.com.br';
+                break;
+            case 'dev':
+                $this->base_url = 'http://alice.mobly.dev';
+                break;
+            default:
+                throw new \RuntimeException('Variavel de ambiente APPLICATION_ENV possui valor invalido');
+        }
+
+        return $scope->getEnvironment();
     }
 
     protected function getPage()

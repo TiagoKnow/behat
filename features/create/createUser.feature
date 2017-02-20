@@ -11,7 +11,7 @@ Feature: Signup
 
     Examples:
       |siteVersion|userType|url|
-      |"lojamobly"|"PJ"|"https://alice-secure.mobly.dev/customer/account/"|
+      |"lojamobly"|"PJ"|/lojamobly/account/login"|
       |"mobly"|"PF"|"/"|
       |"mobly"|"PJ"|"/"|
 

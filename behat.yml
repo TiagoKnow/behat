@@ -3,10 +3,19 @@ default:
     default:
       contexts:
         - Behat\MinkExtension\Context\MinkContext
-        - Context\ApiContext
-        - Context\DBContext
-        - Context\JsonContext
         - Context\ManagerWebContext
+    login:
+      paths:    [ %paths.base%/features/login ]
+      contexts:
+       - Behat\MinkExtension\Context\MinkContext
+       - Context\LoginContext
+       - Context\ManagerWebContext
+    create:
+      paths:    [ %paths.base%/features/create ]
+      contexts:
+             - Behat\MinkExtension\Context\MinkContext
+             - Context\CreateContext
+             - Context\ManagerWebContext
   extensions:
     SensioLabs\Behat\PageObjectExtension: ~
     Behat\MinkExtension\ServiceContainer\MinkExtension:
