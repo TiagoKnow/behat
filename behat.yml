@@ -10,6 +10,8 @@ default:
   extensions:
     SensioLabs\Behat\PageObjectExtension: ~
     Behat\MinkExtension\ServiceContainer\MinkExtension:
-      base_url: http://www.mobly.com.br
-      goutte: ~
+      goutte:
+        guzzle_parameters:
+          ssl.certificate_authority: false
+          verify: false
       selenium2: ~
