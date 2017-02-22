@@ -10,7 +10,7 @@ class AccountCreate extends AbstractPage
     /**
      * @var string $path
      */
-    public $path = 'https://secure.mobly.com.br/customer/account/create/';
+    public $path = '/customer/account/create/';
 
     private $keepPassword;
 
@@ -20,7 +20,7 @@ class AccountCreate extends AbstractPage
      */
     public function setFirstName($firstName = null)
     {
-        $value = null === $firstName ? $this->getFaker()->firstName : $firstName;
+        $value = $this->setValueOrUseFaker($firstName, 'firstName');
         $this->fillField('RegistrationForm[first_name]', $value);
 
         return $this;
@@ -32,7 +32,7 @@ class AccountCreate extends AbstractPage
      */
     public function setLastName($lastName = null)
     {
-        $value = null === $lastName ? $this->getFaker()->lastName : $lastName;
+        $value = $this->setValueOrUseFaker($lastName, 'lastName');
         $this->fillField('RegistrationForm[last_name]', $value);
 
         return $this;
@@ -44,7 +44,11 @@ class AccountCreate extends AbstractPage
      */
     public function setLegalName($legalName = null)
     {
-        $value = null === $legalName ? $this->getFaker()->company . ' ' . $this->getFaker()->companySuffix : $legalName;
+        $value = sprintf(
+            '%s %s',
+            $this->setValueOrUseFaker($legalName, 'company'),
+            $this->setValueOrUseFaker($legalName, 'companySuffix')
+        );
         $this->fillField('RegistrationForm[legal_name]', $value);
 
         return $this;
@@ -56,7 +60,7 @@ class AccountCreate extends AbstractPage
      */
     public function setFantasyName($fantasyName = null)
     {
-        $value = null === $fantasyName ? $this->getFaker()->company : $fantasyName;
+        $value = $this->setValueOrUseFaker($fantasyName, 'company');
         $this->fillField('RegistrationForm[fantasy_name]', $value);
 
         return $this;
@@ -68,10 +72,8 @@ class AccountCreate extends AbstractPage
      */
     public function setCpf($cpf = null)
     {
-        $value = null === $cpf ? $this->getFaker()->cpf : $cpf;
-        $element = $this->find('css', '#RegistrationForm_tax_identification');
-        $element->click();
-        $element->setValue($value);
+        $value = $this->setValueOrUseFaker($cpf, 'cpf');
+        $this->fillFieldWithMask('#RegistrationForm_tax_identification', $value);
 
         return $this;
     }

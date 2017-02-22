@@ -6,6 +6,7 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Tester\Result\TestResult;
 use Page\AccountCreate;
+use Page\Login;
 
 final class ManagerWebContext extends AbstractContext
 {
@@ -14,9 +15,15 @@ final class ManagerWebContext extends AbstractContext
      */
     protected $accountCreatePage;
 
-    public function __construct(AccountCreate $accountCreatePage)
+    /**
+     * @var \Page\Login
+     */
+    protected $loginPage;
+
+    public function __construct(AccountCreate $accountCreatePage, Login $login)
     {
         $this->accountCreatePage = $accountCreatePage;
+        $this->loginPage = $login;
     }
 
     /**
@@ -159,21 +166,17 @@ final class ManagerWebContext extends AbstractContext
         $data = [];
         switch($typeUser) {
             case 'lojamobly' :
+                $this->loginPage->setLojaMoblyPrefix();
                 $data = [
-                    'url' => 'http://alice.mobly.dev/lojamobly/account/login/',
                     'login' => 'dacolera360+miseravel+@gmail.com',
-                    'loginFormField' => 'LoginLojaMoblyForm[email]',
-                    'password' => '1q2w3e',
-                    'passwordFormField' => 'LoginLojaMoblyForm[password]'
+                    'password' => '1q2w3e'
                 ];
                 break;
             case 'mobly' :
+                $this->loginPage->setMoblyPrefix();
                 $data = [
-                    'url' => 'http://alice.mobly.dev/customer/account/login/',
                     'login' => 'dacolera360@gmail.com',
-                    'loginFormField' => 'LoginForm[email]',
                     'password' => '1q2w3e',
-                    'passwordFormField' => 'LoginForm[password]'
                 ];
                 break;
             case  'guest' :
@@ -182,14 +185,21 @@ final class ManagerWebContext extends AbstractContext
             default :
                 throw new \InvalidArgumentException('Tipo de usuario invalido');
         }
+        $this->loginPage->open();
+        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
+        $this->minkContext->reload();
+        $this->loginPage
+            ->setLogin($data['login'])
+            ->setPassword($data['password'])
+            ->send();
 
-        $this->minkContext->visit($data['url']);
+       /* $this->minkContext->visit($data['url']);
         $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
         $this->minkContext->reload();
         $this->minkContext->fillField($data['loginFormField'], $data['login']);
         $this->minkContext->fillField($data['passwordFormField'], $data['password']);
         $this->minkContext->pressButton('Entrar');
-        $this->iWaitSeconds(3);
+        $this->iWaitSeconds(3);*/
     }
 
     /**
@@ -256,7 +266,8 @@ final class ManagerWebContext extends AbstractContext
 
     protected function lojaMoblyAccountCreate()
     {
-        $this->accountCreatePage->path = 'http://alice.mobly.dev/lojamobly/account/create/';
+        $this->selectMultiStagingServerVersion(1);
+        $this->accountCreatePage->path = '/lojamobly/account/create/';
         $this->accountCreatePage->open();
         $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
         $this->minkContext->reload();
