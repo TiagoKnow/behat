@@ -11,7 +11,7 @@ Feature: Signup
 
     Examples:
       |siteVersion|userType|url|
-      |"lojamobly"|"PJ"|"/lojamobly/account/confirm"|
+      |"lojamobly"|"PJ"|"/lojamobly/account/confirm/"|
       |"mobly"|"PF"|"/"|
       |"mobly"|"PJ"|"/"|
 

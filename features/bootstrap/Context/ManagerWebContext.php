@@ -192,14 +192,6 @@ final class ManagerWebContext extends AbstractContext
             ->setLogin($data['login'])
             ->setPassword($data['password'])
             ->send();
-
-       /* $this->minkContext->visit($data['url']);
-        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
-        $this->minkContext->reload();
-        $this->minkContext->fillField($data['loginFormField'], $data['login']);
-        $this->minkContext->fillField($data['passwordFormField'], $data['password']);
-        $this->minkContext->pressButton('Entrar');
-        $this->iWaitSeconds(3);*/
     }
 
     /**
@@ -266,7 +258,6 @@ final class ManagerWebContext extends AbstractContext
 
     protected function lojaMoblyAccountCreate()
     {
-        $this->selectMultiStagingServerVersion(1);
         $this->accountCreatePage->path = '/lojamobly/account/create/';
         $this->accountCreatePage->open();
         $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
