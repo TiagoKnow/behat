@@ -74,7 +74,7 @@ abstract class AbstractContext implements Context
      */
     protected function getEnvironment(BeforeScenarioScope $scope)
     {
-        if (!in_array($_SERVER['APPLICATION_BEHAT_ENV'], ['dev', 'staging', 'live'])) {
+        if (!in_array($_SERVER['APPLICATION_BEHAT_ENV'], ['dev', 'stg01', 'stg02', 'stg03', 'stg04', 'live'])) {
             throw new \RuntimeException('Variavel de ambiente APPLICATION_BEHAT_ENV possui valor invalido');
         }
 
