@@ -17,7 +17,7 @@ class Login extends AbstractPage
 
     const MOBLY_PATH = '/customer/account/login/';
 
-    protected $prefix;
+    public $prefix;
 
     /**
      * @param null $login
@@ -27,7 +27,7 @@ class Login extends AbstractPage
     {
         $value = $this->setValueOrUseFaker($login, 'email');
 
-        $this->fillField($this->prefix . '_email', $value);
+        $this->fillFieldWithMask('#'.$this->prefix . '_email', $value);
 
         return $this;
     }
@@ -40,7 +40,7 @@ class Login extends AbstractPage
     {
         $value = $this->setValueOrUseFaker($password);
 
-        $this->fillField($this->prefix . '_password', $value);
+        $this->fillFieldWithMask('#'.$this->prefix . '_password', $value);
 
         return $this;
     }

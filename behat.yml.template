@@ -14,4 +14,7 @@ default:
         guzzle_parameters:
           ssl.certificate_authority: false
           verify: false
-      selenium2: ~
+      selenium2:
+        wd_host: '[serverHost]:4446/wd/hub'
+        capabilities:
+          version: ''

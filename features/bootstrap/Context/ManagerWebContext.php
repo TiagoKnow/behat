@@ -168,15 +168,15 @@ final class ManagerWebContext extends AbstractContext
             case 'lojamobly' :
                 $this->loginPage->setLojaMoblyPrefix();
                 $data = [
-                    'login' => 'dacolera360+miseravel+@gmail.com',
-                    'password' => '1q2w3e'
+                    'login' => $this->config->environments->{$this->env}->users->lojamobly->login,
+                    'password' => $this->config->environments->{$this->env}->users->lojamobly->password
                 ];
                 break;
             case 'mobly' :
                 $this->loginPage->setMoblyPrefix();
                 $data = [
-                    'login' => 'dacolera360@gmail.com',
-                    'password' => '1q2w3e',
+                    'login' => $this->config->environments->{$this->env}->users->mobly->login,
+                    'password' => $this->config->environments->{$this->env}->users->mobly->password
                 ];
                 break;
             case  'guest' :
@@ -218,6 +218,73 @@ final class ManagerWebContext extends AbstractContext
         }
     }
 
+    /**
+     * @When I choose the first product in catalog
+     */
+    public function iChooseTheFirstProductInCatalog()
+    {
+        $this->iSetCookieNameWithValueFalse("showNewsLetterThisSession");
+        $this->minkContext->reload();
+        $product = $this->getPage()->find('css','.productsCatalog .sel-catalog-product-list-item');
+
+        if (null === $product) {
+            throw new \LogicException('There is no products in catalog');
+        }
+
+        $clickable = $product->find('css', '.itm-title');
+        if (null === $clickable) {
+            throw new \LogicException('Products hasn\'t clickable section');
+        }
+
+        $clickable->click();
+    }
+
+    /**
+     * @When /^I choose the radio button "(?P<radioButton>[^"]+)"$/i
+     */
+    public function iChooseRadioButton($radioButton)
+    {
+        $radio = $this->getPage()->find('css', $radioButton);
+
+        if (null === $radio) {
+            throw new \LogicException('Unable to find requested radio button');
+        }
+
+        $value = $radio->getAttribute('value');
+        $name = $radio->getAttribute('name');
+        $this->getPage()->selectFieldOption($name, $value);
+    }
+
+    /**
+     * @When I fill field with mask :arg1 with :arg2
+     */
+    public function iFillFieldWithMaskWith($arg1, $arg2)
+    {
+        $element = $this->getPage()->find('css', $arg1);
+
+        if (is_null($element)) {
+            throw new \LogicException("Field doesn't exist");
+        }
+
+        $element->click();
+        $element->setValue($arg2);
+    }
+
+    /**
+     * @When I fill delivery address info if needed
+     */
+    public function iFillDeliveryAddressIfNeeded()
+    {
+        try {
+            $this->iFillFieldWithMaskWith('#BillingAddressForm_phone', "11999571712");
+            $this->iFillFieldWithMaskWith('#BillingAddressForm_postcode', "06414000");
+            $this->minkContext->fillField('BillingAddressForm_street_number', "429");
+        } catch (\Exception $e) {
+            // don't worry about that
+        }
+
+    }
+
     protected function moblyPersonAccountCreate()
     {
         $this->accountCreatePage->open();
@@ -229,7 +296,7 @@ final class ManagerWebContext extends AbstractContext
             ->setCpf()
             ->setBirthday()
             ->setEmail()
-            ->setPassword()
+            ->setPassword('1q2w3e')
             ->setPassword2()
             ->setGender()
             ->createAccount();
@@ -249,7 +316,7 @@ final class ManagerWebContext extends AbstractContext
             ->setCompanyEmail()
             ->setState()
             ->setCustomerSegment()
-            ->setPassword()
+            ->setPassword('1q2w3e')
             ->setPassword2()
             ->setIsento()
             ->createAccount();
@@ -270,7 +337,7 @@ final class ManagerWebContext extends AbstractContext
             ->setCompanyEmail()
             ->setState()
             ->setCustomerSegment()
-            ->setPassword()
+            ->setPassword('1q2w3e')
             ->setPassword2()
             ->setIsento()
             ->createAccount();

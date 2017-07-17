@@ -22,6 +22,10 @@ abstract class AbstractContext implements Context
 
     protected $secureBaseUrl;
 
+    protected $config;
+
+    protected $env;
+
     public static $sharedUrl;
 
     /**
@@ -29,6 +33,7 @@ abstract class AbstractContext implements Context
      */
     public function gatherContexts(BeforeScenarioScope $scope)
     {
+        $this->initConfig();
         $environment = $this->getEnvironment($scope);
         $this->minkContext = $environment->getContext('Behat\MinkExtension\Context\MinkContext');
         $this->minkContext->setMinkParameter('base_url', $this->baseUrl);
@@ -36,7 +41,12 @@ abstract class AbstractContext implements Context
         static::$sharedUrl = $this->minkContext->getMinkParameter('base_url');
 
         if ($this->minkContext->getSession()->getDriver() instanceof \Behat\Mink\Driver\Selenium2Driver) {
-            $this->minkContext->getSession()->resizeWindow(1920, 1080, 'current');
+
+            $this->minkContext->getSession()->resizeWindow(
+                $this->config->windowSize->width ? (int)$this->config->windowSize->width: 1920,
+                $this->config->windowSize->height ? (int)$this->config->windowSize->height: 1080,
+                'current'
+            );
         }
     }
 
@@ -49,27 +59,29 @@ abstract class AbstractContext implements Context
     }
 
     /**
+     * Charge configuration file
+     */
+    protected function initConfig()
+    {
+        if (null === $this->config) {
+            $this->config = json_decode(json_encode(include getcwd() . '/config/config.php'));
+        }
+    }
+
+    /**
      * @param BeforeScenarioScope $scope
      * @return \Behat\Testwork\Environment\Environment
      */
     protected function getEnvironment(BeforeScenarioScope $scope)
     {
-        switch ($_SERVER['APPLICATION_ENV']) {
-            case 'live':
-                $this->baseUrl = 'http://www.mobly.com.br';
-                $this->secureBaseUrl = 'https://secure.mobly.com.br';
-                break;
-            case 'staging':
-                $this->baseUrl = 'http://rocket:rock4me@alice-staging01.mobly.com.br';
-                $this->secureBaseUrl = 'https://rocket:rock4me@staging01-secure.mobly.com.br';
-                break;
-            case 'dev':
-                $this->baseUrl = 'http://alice.mobly.dev';
-                $this->secureBaseUrl = 'https://alice-secure.mobly.dev';
-                break;
-            default:
-                throw new \RuntimeException('Variavel de ambiente APPLICATION_ENV possui valor invalido');
+        if (!in_array($_SERVER['APPLICATION_BEHAT_ENV'], ['dev', 'staging', 'live'])) {
+            throw new \RuntimeException('Variavel de ambiente APPLICATION_BEHAT_ENV possui valor invalido');
         }
+
+        $this->env = $env = $_SERVER['APPLICATION_BEHAT_ENV'];
+
+        $this->baseUrl = $this->config->environments->{$env}->baseUrl;
+        $this->secureBaseUrl = $this->config->environments->{$env}->secureUrl;
 
         return $scope->getEnvironment();
     }
@@ -80,33 +92,6 @@ abstract class AbstractContext implements Context
     protected function setSslBaseUrl()
     {
         $this->minkContext->setMinkParameter('base_url', $this->secureBaseUrl);
-
-        static::$sharedUrl = $this->minkContext->getMinkParameter('base_url');
-
-        return $this;
-    }
-
-    /**
-     * @param $version
-     * @return $this|null
-     */
-    protected function selectMultiStagingServerVersion($version)
-    {
-        if ($_SERVER['APPLICATION_ENV'] != 'staging') {
-            //don't bother in this case
-            return null;
-        }
-        if (!in_array((int)$version, [1,2,3,4,5])) {
-            //don't bother either
-            return null;
-        }
-
-        $host = preg_replace('/(staging)/', '${1}0'. $version, $this->minkContext->getMinkParameter('base_url'));
-
-        $this->minkContext->setMinkParameter(
-            'base_url',
-            $host
-        );
 
         static::$sharedUrl = $this->minkContext->getMinkParameter('base_url');
 

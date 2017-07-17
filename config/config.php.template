@@ -1,0 +1,142 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: jurandir
+ * Date: 17/07/17
+ * Time: 14:48
+ */
+
+return [
+    'environments' => [
+        'dev' => [
+            'baseUrl' => '',
+            'secureUrl' => '',
+            'users' => [
+                'mobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+                'lojamobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+            ],
+            'db' => [
+                'username' => '',
+                'host' => '',
+                'database' => '',
+                'password' => ''
+
+            ]
+        ],
+        'stg01' => [
+            'baseUrl' => '',
+            'secureUrl' => '',
+            'users' => [
+                'mobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+                'lojamobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+            ],
+            'db' => [
+                'username' => '',
+                'host' => '',
+                'database' => '',
+                'password' => ''
+
+            ]
+        ],
+        'stg02' => [
+            'baseUrl' => '',
+            'secureUrl' => '',
+            'users' => [
+                'mobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+                'lojamobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+            ],
+            'db' => [
+                'username' => '',
+                'host' => '',
+                'database' => '',
+                'password' => ''
+
+            ]
+        ],
+        'stg03' => [
+            'baseUrl' => '',
+            'secureUrl' => '',
+            'users' => [
+                'mobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+                'lojamobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+            ],
+            'db' => [
+                'username' => '',
+                'host' => '',
+                'database' => '',
+                'password' => ''
+
+            ]
+        ],
+        'stg04' => [
+            'baseUrl' => '',
+            'secureUrl' => '',
+            'users' => [
+                'mobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+                'lojamobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+            ],
+            'db' => [
+                'username' => '',
+                'host' => '',
+                'database' => '',
+                'password' => ''
+
+            ]
+        ],
+        'live' => [
+            'baseUrl' => '',
+            'secureUrl' => '',
+            'users' => [
+                'mobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+                'lojamobly' => [
+                    'login' => '',
+                    'password' => ''
+                ],
+            ],
+            'db' => [
+                'username' => '',
+                'host' => '',
+                'database' => '',
+                'password' => ''
+
+            ]
+        ],
+    ],
+    'windowSize' => [
+        'width' => '',
+        'height' => ''
+    ]
+];

@@ -1,3 +1,5 @@
 vendor/
 bin/
 .idea/
+config/config.php
+behat.yml
